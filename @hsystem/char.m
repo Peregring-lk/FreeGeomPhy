@@ -18,8 +18,8 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hs = and(a, b)
+function str = char(hs)
 
-  hs = hsystem("&", a, b);
+  str = char(hs.hsystem);
 
 endfunction

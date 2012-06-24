@@ -18,8 +18,37 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hs = and(a, b)
+function v = subsref(hs, idx)
 
-  hs = hsystem("&", a, b);
+  if (isempty(idx))
+    error("hsystem: expecting an index");
+  endif
+
+  if (idx(1).type == "{}")
+    if (idx(1).subs{1} > length(hs.equations))
+      error("hsystem: invalid array access");
+    endif
+
+    if (idx(1).subs{1} == 0)
+      v = hs.op;
+    else
+      idx1 = idx(1).subs{1};
+
+      if (length(idx) > 1)
+        if (idx(2).type != "{}")
+          error("hsystem: invalid member access");
+        else
+          idx(1) = [];
+          v = subsref(hs.equations{idx1}, idx);
+        endif
+      else
+        v = hs.equations{idx1};
+      endif
+    endif
+  elseif (idx(1).type == "()")
+    v = hs.hsystem(idx(1).subs{:});
+  else
+    error("hsystem: invalid subscript type");
+  endif
 
 endfunction

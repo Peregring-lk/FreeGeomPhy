@@ -18,8 +18,12 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hs = and(a, b)
+function display(hg)
 
-  hs = hsystem("&", a, b);
+  display([ "domain: " hs.hsystem ]);
+  display([ "origin: " hs.origin ]);
+  display([ "scale: " hs.scale ]);
+  display([ "alpha: " hs.alpha ]);
+  display([ "beta: " hs.beta ]);
 
 endfunction

@@ -18,8 +18,27 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hs = and(a, b)
+function he = not(he)
 
-  hs = hsystem("&", a, b);
+  op = he{0};
+
+  switch (op)
+    case "<"
+      op = ">=";
+    case "<="
+      op = ">"
+    case ">"
+      op = "<=";
+    case ">="
+      op = "<";
+    case "=="
+      op = "!=";
+    case "!="
+      op = "==";
+    otherwise
+      error("hequation: not: invalid comparision operator");
+  endswitch
+
+  he{0} = op;
 
 endfunction

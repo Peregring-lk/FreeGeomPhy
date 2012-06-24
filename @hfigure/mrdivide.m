@@ -18,8 +18,16 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hs = and(a, b)
+function hg = mrdivide(hg, n)
 
-  hs = hsystem("&", a, b);
+  if (!isa(hg, "hfigure"))
+    error("hfigure: mtimes: expecting a figure as first operand");
+  endif
+
+  if (!isnumeric(n))
+    error("hfigure: mtimes: expecting a number as second operand");
+  endif
+
+  hg.scale /= n;
 
 endfunction

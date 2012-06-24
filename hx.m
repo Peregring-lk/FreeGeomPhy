@@ -20,6 +20,6 @@
 
 function hx = hx()
 
-  hx = hfunction;
+  hx = hfunction("x");
 
 endfunction

@@ -18,8 +18,29 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hs = and(a, b)
+function hg = subsasgn(hg, idx, rhs)
 
-  hs = hsystem("&", a, b);
+  if (idx(1).type == ".")
+    if (!isnumeric(rhs))
+      error("hfigure: subsasgn: expecting a numeric value");
+    endif
+
+    switch (idx(1).subs{1})
+      case "origin"
+        hs.origin = rhs;
+      case "scale"
+        hs.scale = rhs;
+      case "alpha"
+        hs = hs < (rhs - hg.alpha);
+      case "beta"
+        hs = hs ^ (rhs - hg.beta);
+      otherwise
+        error("hfigure: subsasgn: invalid object access");
+    endswitch
+  elseif (idx(1).type == "{}")
+    subsasgn(hg.hsystem, idx, rhs);
+  else
+    error("hfigure: subsasgn: invalid object access");
+  endif
 
 endfunction

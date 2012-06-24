@@ -18,26 +18,40 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function v = subsref(hf, idx)
+function hs = subsasgn(hs, idx, rhs)
 
   if (isempty(idx))
-    error("hfunction: subsref: expecting an index");
+    error("hsystem: expecting an index");
   endif
 
-  if (idx.type == ".")
-    if (idx.subs == "hfunction")
-      v = hf.hfunction;
-    else
-      error("hfunction: subsref: invalid element access");
-    endif
-  elseif (idx.type == "()")
-    if (size(idx(1).subs{1}, 1) != 3)
-      error("hfunction: subsref: expecting a three dimensional first parameter");
+  if (idx(1).type == "{}")
+    if (idx(1).subs{1} > length(hs.equations))
+      error("hsystem: invalid member access");
     endif
 
-    v = hf.hfunction(idx(1).subs{1}(1, :), idx(1).subs{1}(2, :), idx(1).subs{1}(3, :), idx.subs{2:end});
+    if (idx(1).subs{1} == 0)
+      hs.op = rhs;
+    else
+      idx1 = idx(1).subs{1};
+
+      if (length(idx) > 1)
+        if (idx(2).type != "{}")
+          error("hsystem: invalid member access");
+        else
+          idx(1) = [];
+
+          hs0 = subsasgn(hs.equations{idx1}, idx, rhs);
+          hs.equations{idx1} = hs0;
+        endif
+      else
+        hs.equations{idx1} = rhs;
+      endif
+    endif
+
+    hs = hsystem(hs.op, hs.equations{:});
+
   else
-    error("hfunction: subsref: invalid subscript type");
+    error("hsystem: invalid subscript type");
   endif
 
 endfunction

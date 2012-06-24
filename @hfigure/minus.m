@@ -18,8 +18,20 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hs = and(a, b)
+function hg = minus(hg, b)
 
-  hs = hsystem("&", a, b);
+  if (!isa(hg, "hfigure"))
+    error("hfigure: minus: expecting a figure as first operand");
+  endif
+
+  if (!isa(b, "hfigure") && !isa(b, "hsystem") && !isnumeric(b))
+    error("hfigure: minus: expecting a figure, equation system or number as second operand");
+  endif
+
+  if (isnumeric(b))
+    hg = hg + -b;
+  else
+    hg = hg + !b;
+  endif
 
 endfunction

@@ -29,9 +29,9 @@ function hf = hfunction(arg, op)
     hf = arg;
   else
     if (is_function_handle(arg))
-      hf.hfunction = inline([func2str(arg) "(x)"]);
+      hf.hfunction = inline([func2str(arg) "([x; y; z])"]);
       hf.op = "@";
-    elseif (ischar(arg))
+    elseif (ischar(arg)) # For internal purposes only.
       hf.hfunction = inline(arg);
 
       if (isvarname(arg))

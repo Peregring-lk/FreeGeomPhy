@@ -18,8 +18,24 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hs = and(a, b)
+function hg = hfigure(origin, scale, alpha, beta, hs)
 
-  hs = hsystem("&", a, b);
+  if (nargin < 5)
+    error("hfigure: expecting five arguments");
+  endif
+
+  hg.hsystem = hs;
+
+  hg.origin = origin;
+  hg.scale = scale;
+
+  hg.alpha = 0;
+  hg.beta = 0;
+  hg.rotm = diag([1 1 1], 0);
+
+  hg = class(hg, "hfigure");
+
+  hg < alpha;
+  hg ^ alpha;
 
 endfunction

@@ -18,8 +18,4 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hs = and(a, b)
-
-  hs = hsystem("&", a, b);
-
-endfunction
+function hs = plus(hs1, hs2)

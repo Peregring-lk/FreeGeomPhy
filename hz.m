@@ -18,8 +18,8 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hs = and(a, b)
+function hz = hz()
 
-  hs = hsystem("&", a, b);
+  hz = hfunction("z");
 
 endfunction

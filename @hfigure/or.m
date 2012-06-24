@@ -18,8 +18,22 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hs = and(a, b)
+function hg = or(a, b)
 
-  hs = hsystem("&", a, b);
+  if (isa(a, "hfigure"))
+    hg = a;
+    a = a.hsystem;
+  elseif (!isa(a, "hsystem"))
+    error("hfigure: mtimes: expecting two figures or equation systems");
+  endif
+
+  if (isa(b, "hfigure"))
+    hg = b;
+    b = b.hsystem;
+  elseif (!isa(b, "hsystem"))
+    error("hfigure: mtimes: expecting two figures or equation systems");
+  endif
+
+  hg.hsystem = a + b - a * b;
 
 endfunction

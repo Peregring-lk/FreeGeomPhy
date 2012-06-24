@@ -18,42 +18,41 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function v = subsref(he, idx)
+function v = subsref(hs, idx)
 
   if (isempty(idx))
-    error("hequation: expecting an index");
+    error("hsystem: expecting an index");
   endif
 
-  if (idx(1).type == ".") # For internal purposes only.
-    if (idx(1).subs == "hequation")
-      v = he.hequation;
-    elseif (idx(1).subs == "hfirst")
-      v = he.hfirst;
-    elseif (idx(1).subs == "hsecond")
-      v = he.hsecond;
-    elseif (idx(1).subs == "op")
-      v = he.op;
-    else
-      error("hequation: invalid element access");
+  if (idx(1).type == "{}")
+    if (idx(1).subs{1} > length(hs.equations))
+      error("hsystem: invalid array access");
     endif
-  elseif (idx(1).type == "{}")
+
     if (idx(1).subs{1} == 0)
-      v = he.op;
-    elseif (idx(1).subs{1} == 1)
-      v = he.hfirst;
-    elseif (idx(1).subs{1} == 2)
-      v = he.hsecond;
+      v = hs.op;
     else
-      error("hequation: invalid member access");
+      idx1 = idx(1).subs{1};
+
+      if (length(idx) > 1)
+        if (idx(2).type != "{}")
+          error("hsystem: invalid member access");
+        else
+          idx(1) = [];
+          v = subsref(hs.equations{idx1}, idx);
+        endif
+      else
+        v = hs.equations{idx1};
+      endif
     endif
   elseif (idx(1).type == "()")
     if (size(idx(1).subs{1}, 1) != 3)
       error("hfunction: subsref: expecting a three dimensional first parameter");
     endif
 
-    v = he.hequation(idx(1).subs{1}(1, :), idx(1).subs{1}(2, :), idx(1).subs{1}(3, :), idx.subs{2:end});
+    v = hs.hsystem(idx(1).subs{1}(1, :), idx(1).subs{1}(2, :), idx(1).subs{1}(3, :), idx.subs{2:end});
   else
-    error("hequation: invalid subscript type");
+    error("hsystem: invalid subscript type");
   endif
 
 endfunction

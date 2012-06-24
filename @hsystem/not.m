@@ -18,8 +18,19 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hs = and(a, b)
+function hs = not(hs)
 
-  hs = hsystem("&", a, b);
+  op = hs{0};
+
+  switch (op)
+    case "&"
+      op = "|";
+    case "|"
+      op = "&";
+    otherwise
+      error("hsystem: not: invalid set operation");
+  endswitch
+
+  hs = hsystem(op, !hs{1}, !hs{2});
 
 endfunction

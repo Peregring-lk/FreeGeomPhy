@@ -18,37 +18,6 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function v = subsref(hs, idx)
-
-  if (isempty(idx))
-    error("heqsystem: expecting an index");
-  endif
-
-  if (idx(1).type == "{}")
-    if (idx(1).subs{1} > length(hs.equations))
-      error("heqsystem: invalid array access");
-    endif
-
-    if (idx(1).subs{1} == 0)
-      v = hs.op;
-    else
-      idx1 = idx(1).subs{1};
-
-      if (length(idx) > 1)
-        if (idx(2).type != "{}")
-          error("heqsystem: invalid member access");
-        else
-          idx(1) = [];
-          v = subsref(hs.equations{idx1}, idx);
-        endif
-      else
-        v = hs.equations{idx1};
-      endif
-    endif
-  elseif (idx(1).type == "()")
-    v = hs.heqsystem(idx(1).subs{:});
-  else
-    error("heqsystem: invalid subscript type");
-  endif
+function hg = lt(hg, n)
 
 endfunction
