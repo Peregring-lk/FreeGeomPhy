@@ -18,24 +18,74 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hg = hfigure(origin, scale, alpha, beta, hs)
+function hfg = hfigure(hs, dim, origin, scale, alpha, beta)
 
-  if (nargin < 5)
-    error("hfigure: expecting five arguments");
+  if (nargin == 0)
+    error("hfigure: constructor: expecting almost a equation system as parameter");
   endif
 
-  hg.hsystem = hs;
+  if (nargin < 2)
+    dim = 3;
+  elseif (!isscalar(dim) || dim < 2 || dim > 3)
+    error("hfigure: constructor: expecting a scalar value (2 or 3) as dimension");
+  endif
 
-  hg.origin = origin;
-  hg.scale = scale;
+  if (nargin < 3)
+    origin = zeros(dim, 1);
+  elseif (!isvector(origin) || !isnumeric(origin))
+    error("hfigure: constructor: expecting a numeric vector or scalar as origin");
+  else
+    origin = origin(:);
 
-  hg.alpha = 0;
-  hg.beta = 0;
-  hg.rotm = diag([1 1 1], 0);
+    if (length(origin) != dim)
+      error(["hfigure: construct: expecting a origin vector with dimension " dim ]);
+    endif
+  endif
 
-  hg = class(hg, "hfigure");
+  if (nargin < 4)
+    scale = 1;
+  elseif (!isvector(scale) || !isnumeric(scale))
+    error("hfigure: construct: expecting a numeric vector or scalar as scale");
+  else
+    scale = scale(:);
 
-  hg < alpha;
-  hg ^ alpha;
+    if (length(scale) != 1 && length(scale) != dim)
+      error(["hfigure: construct: expecting scale as scalar value or vector with dimension " dim ]);
+    endif
+
+  endif
+
+  if (nargin < 5)
+    alpha = 0;
+  elseif (!isscalar(alpha))
+    error("hfigure: construct: expecting a scalar as alpha");
+  endif
+
+  if (nargin < 6 && dim > 2)
+    beta = 0;
+  elseif (!isscalar(beta))
+    error("hfigure: construct: expecting a scalar as beta");
+  endif
+
+  hfg.hsystem = hsystem(hs) < "X";
+
+  hfg.dim = dim;
+
+  hfg.origin = origin;
+  hfg.scale = scale;
+  hfg.alpha = 0;
+  hfg.beta = 0;
+
+  hfg.mrot = diag(ones(1, dim), 0);
+
+  hfg = class(hfg, "hfigure");
+
+  hfg = hfg < alpha;
+
+  if (dim > 2)
+    hfg = hfg ^ beta;
+  endif
+
+  superiorto("hsystem");
 
 endfunction

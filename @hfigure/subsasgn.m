@@ -18,29 +18,69 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hg = subsasgn(hg, idx, rhs)
+function hfg = subasgn(hfg, idx, rhs)
+
+  if (isempty(idx))
+    error("hsystem: subsref: expecting a index cell");
+  endif
 
   if (idx(1).type == ".")
-    if (!isnumeric(rhs))
-      error("hfigure: subsasgn: expecting a numeric value");
-    endif
-
-    switch (idx(1).subs{1})
+    switch (idx(1).subs)
       case "origin"
-        hs.origin = rhs;
+        if (!isvector(rhs) || !isnumeric(rhs))
+          error("hfigure: subsasgn: expecting a numeric vector or scalar as origin");
+        endif
+
+        rhs = rhs(:);
+
+        if (length(rhs) != hfg.dim)
+          error(["hfigure: subasgn: expecting a origin vector with dimension " dim ]);
+        endif
+
+        hfg.origin = rhs;
+
       case "scale"
-        hs.scale = rhs;
+        if (!isvector(rhs) || !isnumeric(rhs))
+          error("hfigure: subasng: expecting a numeric vector or scalar as scale");
+        endif
+
+        rhs = rhs(:);
+
+        if (length(rhs) != 1 && length(rhs) != dim)
+          error(["hfigure: subasgn: expecting scale as scalar value or vector with dimension " dim ]);
+        endif
+
+        hfg.scale = rhs;
+
       case "alpha"
-        hs = hs < (rhs - hg.alpha);
+        if (!isscalar(rhs))
+          error("hfigure: subasgn: expecting a scalar as alpha");
+        endif
+
+        rhs = hfg.alpha - rhs;
+
+        hfg = hfg < rhs;
+
       case "beta"
-        hs = hs ^ (rhs - hg.beta);
+        if (hfg.dim == 3)
+          if (!isscalar(rhs))
+            error("hfigure: subasgn: expecting a scalar as alpha");
+          endif
+
+          rhs = hfg.beta - rhs;
+
+          hfg = hfg ^ rhs;
+
+        endif
+
       otherwise
-        error("hfigure: subsasgn: invalid object access");
+        error("hfigure: subasgn: invalid access element");
     endswitch
+
   elseif (idx(1).type == "{}")
-    subsasgn(hg.hsystem, idx, rhs);
+    hfg.hsystem = subsasgn(hfg.hsystem, idx, rhs);
   else
-    error("hfigure: subsasgn: invalid object access");
+    error("hfigure: subasgn: invalid access");
   endif
 
 endfunction

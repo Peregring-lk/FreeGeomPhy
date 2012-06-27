@@ -18,21 +18,36 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function subsasgn(hf, idx, rhs)
+function hc = hc(a, b, c)
 
-  if (isempty(idx))
-    error("hfunction: expecting an index");
+  if (nargin < 2)
+    error("hfunction: hc: expecting almost two arguments");
   endif
 
-  if (idx.type == ".") # For internal purposes only.
-    if (idx.subs == "hfunction")
-      hf0 = hfunction(rhs);
-      hf.hfunction = hf0.hfunction;
-    else
-      error("hfunction: invalid element access");
-    endif
+  if (ischar(a))
+    hc = a;
+  elseif (isscalar(a))
+    hc = num2str(a);
   else
-    error("hfunction: invalid subscript type");
+    error("hfunction: hc: expecting string or scalar arguments");
+  endif
+
+  if (ischar(b))
+    hc = [ hc ":" b ];
+  elseif (isscalar(b))
+    hc = [ hc ":" num2str(b) ];
+  else
+    error("hfunction: hc: expecting string or scalar arguments");
+  endif
+
+  if (nargin == 3)
+    if (ischar(c))
+      hc = [ hc ":" c ];
+    elseif (isscalar(c))
+      hc = [ hc ":" num2str(b) ];
+    else
+      error("hfunction: hc: expecting string or scalar arguments");
+    endif
   endif
 
 endfunction

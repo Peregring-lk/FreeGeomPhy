@@ -18,8 +18,8 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hg = not(hg)
+function hfg = not(hfg)
 
-  hg.hsystem = !hg.hsystem;
+  hfg.hsystem = !hfg.hsystem;
 
 endfunction

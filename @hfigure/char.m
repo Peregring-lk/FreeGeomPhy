@@ -18,8 +18,8 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hfg = mrdivide(hfg, n)
+function str = char(hfs)
 
-  hfg = mpower(hfg, 1 / n);
+  str = char(hfs.hsystem);
 
 endfunction

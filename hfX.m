@@ -18,8 +18,8 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hx = hx()
+function hX = hfX()
 
-  hx = hfunction("x");
+  hX = hfunction("X", 0, "X");
 
 endfunction

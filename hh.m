@@ -18,8 +18,12 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hfg = mrdivide(hfg, n)
+function hh = hh(hf, varargin)
 
-  hfg = mpower(hfg, 1 / n);
+  if (!is_function_handle(hf))
+    error("hh: expecting a function handle argument");
+  endif
+
+  hh = hfunction(hf, 0, varargin{:});
 
 endfunction

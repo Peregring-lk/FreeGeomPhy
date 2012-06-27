@@ -18,60 +18,66 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hf = _binaryop(a, b, op)
+function hf = _binaryop(hf1, hf2, op)
 
-  if (!isa(a, "hfunction"))
-    a = hfunction(a);
+  hf1 = hfunction(hf1);
+  hf2 = hfunction(hf2);
+
+  ## Brackets discrimination
+  brackets1 = false;
+  brackets2 = false;
+
+  idxop = _idxop(op);
+
+  if (idxop < hf1.idxop)
+    brackets1 = true;
   endif
 
-  if (!isa(b, "hfunction"))
-    b = hfunction(b);
+  if (idxop < hf2.idxop)
+    brackets2 = true;
   endif
 
-  str = char(a);
+  ## Making the function (string for inline)
+  str1 = char(hf1);
+  str2 = char(hf2);
 
-  if (_ispow(op))
-    if (a.op == "@")
-      str = [ str " " op " " ];
-    else
-      str = [ "(" str ")" " " op " " ];
-    endif
+  if (brackets1)
+    str1 = [ "(" str1 ")" ];
+  endif
 
-    if (b.op == "@")
-      str = [ str char(b) ];
-    else
-      str = [ str "(" char(b) ")" ];
-    endif
+  if (brackets2)
+    str2 = [ "(" str2 ")" ];
+  endif
 
-  elseif (_ismul(op))
-    if (_ispow(a.op) || _ismul(a.op) || a.op == "@")
-      str = [ str " " op " " ];
-    else
-      str = [ "(" str ")" " " op " " ];
-    endif
+  str = [ str1 " " op " " str2 ];
 
-    if (_ispow(b.op) || _ismul(b.op) || b.op == "@")
-      str = [ str char(b) ];
-    else
-      str = [ str "(" char(b) ")" ];
-    endif
+  ## Making variable list
+  vars = { argnames(hf1){:}, argnames(hf2){:} };
 
+  [ u i ] = unique(vars, "first");
+  vars = vars(sort(i));
+
+  ## Making hfunction
+  hf = hfunction(str, idxop, vars{:});
+
+endfunction
+
+function p = _idxop(op)
+
+  if (op == "^" || op == ".^")
+    p = 2;
+  elseif (op == "*" || op == ".*" || op == "/" || op == "./")
+    p = 4;
+  elseif (op == "+" || op == "-")
+    p = 5;
+  elseif (op == "<" || op == "<=" || op == "==" || op == "!=" || op == ">=" || op == ">")
+    p = 7;
+  elseif (op == "&")
+    p = 8;
+  elseif (op == "|")
+    p = 9;
   else
-    str = [ str " " op " " char(b) ];
+    error("_binaryop: idxop: invalid operator");
   endif
-
-  hf = hfunction(str, op);
-
-endfunction
-
-function b = _ispow(op)
-
-  b = op == "^" || op == ".^";
-
-endfunction
-
-function b = _ismul(op)
-
-  b = op == "*" || op == "/" || op == ".*" || op == "./";
 
 endfunction

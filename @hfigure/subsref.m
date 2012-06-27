@@ -18,31 +18,42 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function v = subsref(hg, idx)
+function v = subsref(hfg, idx)
 
-  warning("off", "Octave:broadcast");
+  if (isempty(idx))
+    error("hsystem: subsref: expecting a index cell");
+  endif
 
   if (idx(1).type == ".")
-    switch (idx(1).subs{1})
+    switch (idx(1).subs)
+      case "system"
+        v = hfg.hsystem;
+      case "dim"
+        v = hfg.dim;
       case "origin"
-        v = hg.origin;
+        v = hfg.origin;
       case "scale"
-        v = hg.scale;
+        v = hfg.scale;
       case "alpha"
-        v = hg.alpha;
+        v = hfg.alpha;
       case "beta"
-        v = hg.beta;
-      otherwise
-        error("hfigure: subsref: invalid object access");
+        v = hfg.beta;
     endswitch
-  else
-    x = idx(1).subs{1};
+  elseif (idx(1).type == "{}")
+    v = subsref(hfg.hsystem, idx);
+  elseif (idx(1).type == "()")
+    X = idx(1).subs{1};
 
-    x -= hg.origin;
-    x = hg.rotm * x;
-    x /= hg.scale;
+    if (size(X, 1) != hfg.dim)
+      error(["hfigure: subsref: expecting a matrix data of dimension " hfg.dim]);
+    endif
 
-    v = hg.hsystem(x, idx(1).subs{2:end});
+    X -= hfg.origin;
+    X = hfg.mrot * X;
+    X /= scale;
+
+    hfg.hsystem(X, idx(1).subs{2:end}{:});
+
   endif
 
 endfunction

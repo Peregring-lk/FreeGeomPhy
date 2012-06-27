@@ -18,8 +18,8 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hs = or(a, b)
+function hs = or(he1, he2)
 
-  hs = hsystem("|", a, b);
+  hs = hsystem("|", he1, he2);
 
 endfunction

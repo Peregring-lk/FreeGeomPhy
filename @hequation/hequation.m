@@ -18,41 +18,45 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function he = hequation(a, b, op)
-
-  if (nargin == 0)
-    error("hequation: expecting one argument");
-  endif
+function he = hequation(hf1, hf2, op)
 
   if (nargin == 1)
-    if (isa(a, "hequation"))
-      he = a;
-    else
-      error("hequation: expecting three arguments");
+    if (isa(hf1, "hequation"))
+      he = hf1;
+      return;
     endif
-  elseif (nargin == 2)
-    error("hequation: expecting three arguments");
-  else
-    if (!isa(a, "hfunction"))
-      a = hfunction(a);
-    endif
-
-    if (!isa(b, "hfunction"))
-      b = hfunction(b);
-    endif
-
-    if (op != "<" && op != "<=" && op != ">" && op != ">=" && op != "==" && op != "!=")
-      error("hequation: expecting an comparision operator");
-    endif
-
-    he.hequation = inline([char(a) " " op " " char(b)]);
-
-    he.hfirst = a;
-    he.hsecond = b;
-    he.op = op;
-
-    he = class(he, "hequation");
-
   endif
+
+  if (nargin < 3)
+    error("hequation: constructor: expecting almost three operands");
+  endif
+
+  he.hequation = [];
+  he.first = [];
+  he.second = [];
+  he.op = op;
+
+  if (op != "<" && op != "<=" && op != ">" && op != ">=" && op != "==" && op != "!=")
+    error("hequation: constructor: expecting an comparision operator");
+  endif
+
+  hf1 = hfunction(hf1);
+  hf2 = hfunction(hf2);
+
+  he.first = hf1;
+  he.second = hf2;
+
+  ## Making variable list
+  vars = { argnames(hf1){:}, argnames(hf2){:} };
+
+  [ u i ] = unique(vars, "first");
+  vars = vars(sort(i));
+
+  ## Making hfunction
+  he.hequation = inline([char(hf1) " " op " " char(hf2)], vars{:});
+
+  he = class(he, "hequation");
+
+  superiorto("hfunction");
 
 endfunction

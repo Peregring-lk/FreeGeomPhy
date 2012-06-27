@@ -21,38 +21,36 @@
 function v = subsref(hs, idx)
 
   if (isempty(idx))
-    error("hsystem: expecting an index");
+    error("hsystem: subsref: expecting a index cell");
   endif
 
   if (idx(1).type == "{}")
-    if (idx(1).subs{1} > length(hs.equations))
-      error("hsystem: invalid array access");
+    if (idx(1).subs{1} > 2)
+      error("hsystem: subsref: invalid member access");
     endif
 
     if (idx(1).subs{1} == 0)
       v = hs.op;
     else
-      idx1 = idx(1).subs{1};
+      idx1 = idx(1);
 
       if (length(idx) > 1)
-        if (idx(2).type != "{}")
-          error("hsystem: invalid member access");
-        else
-          idx(1) = [];
-          v = subsref(hs.equations{idx1}, idx);
-        endif
+        idx(1) = [];
+        v = subsref(hs{idx1}, idx);
       else
-        v = hs.equations{idx1};
+        if (idx1.subs{1} == 1)
+          v = hs.hfirst;
+        elseif (idx1.subs{1} == 2)
+          v = hs.hsecond;
+        else
+          error("hsystem: subsref: invalid index access");
+        endif
+
       endif
+
     endif
   elseif (idx(1).type == "()")
-    if (size(idx(1).subs{1}, 1) != 3)
-      error("hfunction: subsref: expecting a three dimensional first parameter");
-    endif
-
-    v = hs.hsystem(idx(1).subs{1}(1, :), idx(1).subs{1}(2, :), idx(1).subs{1}(3, :), idx.subs{2:end});
-  else
-    error("hsystem: invalid subscript type");
+    v = hs.hsystem(idx(1).subs{:});
   endif
 
 endfunction

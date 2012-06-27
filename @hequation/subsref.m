@@ -21,39 +21,24 @@
 function v = subsref(he, idx)
 
   if (isempty(idx))
-    error("hequation: expecting an index");
+    error("hsystem: subsref: expecting a index cell");
   endif
 
-  if (idx(1).type == ".") # For internal purposes only.
-    if (idx(1).subs == "hequation")
-      v = he.hequation;
-    elseif (idx(1).subs == "hfirst")
-      v = he.hfirst;
-    elseif (idx(1).subs == "hsecond")
-      v = he.hsecond;
-    elseif (idx(1).subs == "op")
-      v = he.op;
-    else
-      error("hequation: invalid element access");
-    endif
-  elseif (idx(1).type == "{}")
-    if (idx(1).subs{1} == 0)
-      v = he.op;
-    elseif (idx(1).subs{1} == 1)
-      v = he.hfirst;
-    elseif (idx(1).subs{1} == 2)
-      v = he.hsecond;
-    else
-      error("hequation: invalid member access");
-    endif
+  if (idx(1).type == "{}")
+    switch(idx(1).subs{1})
+      case 0
+        v = he.op;
+      case 1
+        v = he.first;
+      case 2
+        v = he.second;
+      otherwise
+        error("hequation: subsref: invalid access subscript (permited values between 0 and 2)");
+    endswitch
   elseif (idx(1).type == "()")
-    if (size(idx(1).subs{1}, 1) != 3)
-      error("hfunction: subsref: expecting a three dimensional first parameter");
-    endif
-
-    v = he.hequation(idx(1).subs{1}(1, :), idx(1).subs{1}(2, :), idx(1).subs{1}(3, :), idx.subs{2:end});
+    v = he.hequation(idx(1).subs{:});
   else
-    error("hequation: invalid subscript type");
+    error("hequation: subsref: invalid access operator");
   endif
 
 endfunction

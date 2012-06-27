@@ -18,12 +18,22 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function display(hg)
+function display(hfs)
 
-  display([ "domain: " hs.hsystem ]);
-  display([ "origin: " hs.origin ]);
-  display([ "scale: " hs.scale ]);
-  display([ "alpha: " hs.alpha ]);
-  display([ "beta: " hs.beta ]);
+  disp("analytic description: "), display(hfs.hsystem);
+  disp(["dimension: " num2str(hfs.dim)]);
+  disp("origin: "), disp(hfs.origin);
+
+  if (isscalar(hfs.scale))
+    disp(["scale: ", num2str(hfs.scale)]);
+  else
+    disp("scale: "), disp(hfs.scale);
+  endif
+
+  disp(["horizontal angle (rad): ", num2str(hfs.alpha)]);
+
+  if (hfs.dim == 3)
+    disp(["vertical angle (rad): ", num2str(hfs.beta)]);
+  endif
 
 endfunction

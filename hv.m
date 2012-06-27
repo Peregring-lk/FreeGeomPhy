@@ -18,8 +18,12 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hfg = mrdivide(hfg, n)
+function hv = hv(varname)
 
-  hfg = mpower(hfg, 1 / n);
+  if (!isvarname(varname))
+    error("hv: expecting a variable name");
+  endif
+
+  hv = hfunction(varname, 0, varname);
 
 endfunction

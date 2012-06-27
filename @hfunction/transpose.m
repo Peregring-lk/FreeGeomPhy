@@ -18,8 +18,8 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hz = hz()
+function hf = transpose(hf)
 
-  hz = hfunction("z");
+  hf = _unaryop(hf, ".'");
 
 endfunction

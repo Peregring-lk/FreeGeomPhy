@@ -18,12 +18,40 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hf = _unaryop(a, op)
+function hf = _unaryop(hf, op)
 
-  if (!isa(a, "hfunction"))
-    a = hfunction(a);
+  hf = hfunction(hf);
+
+  ## Brackets discrimination
+  brackets = false;
+  idxop = _idxop(op);
+
+  if (idxop < hf.idxop)
+    brackets = true;
   endif
 
-  hf = hfunction([op "(" char(a) ")"]);
+  ## Making the function (string for inline)
+  str = char(hf);
+
+  if (brackets)
+    str = [ "(" str ")" ];
+  endif
+
+  str = [ op str ];
+
+  ## Making hfunction
+  hf = hfunction(str, idxop, argnames(hf){:});
+
+endfunction
+
+function p = _idxop(op)
+
+  if (op == "'" || op == ".'")
+    p = 2;
+  elseif (op == "+" || op == "-" || op == "!")
+    p = 3;
+  else
+    error("_unaryop: idxop: invalid operator");
+  endif
 
 endfunction

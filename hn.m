@@ -18,8 +18,8 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hy = hy()
+function hn = hn(n)
 
-  hy = hfunction("y");
+  hn = hfunction(n, 0);
 
 endfunction

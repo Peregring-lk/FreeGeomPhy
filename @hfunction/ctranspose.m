@@ -18,8 +18,8 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hfg = mrdivide(hfg, n)
+function hf = ctranspose(hf)
 
-  hfg = mpower(hfg, 1 / n);
+  hf = _unaryop(hf, "'");
 
 endfunction

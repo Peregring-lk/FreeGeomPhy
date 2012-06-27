@@ -20,29 +20,25 @@
 
 function he = subsasgn(he, idx, rhs)
 
-  if (isempty(idx))
-    error("hequation: expecting an index");
+  if (idx(1).type != "{}")
+    error("hequation: subsref: invalid access operator");
   endif
 
-  if (idx(1).type == "{}")
-    op = he.op;
-    first = he.hfirst;
-    second = he.hsecond;
+  switch(idx(1).subs{1})
+    case 0
+      if (!ischar(rhs))
+        error("hequation: subsasgn: expecting a string operator");
+      endif
 
-    if (idx(1).subs{1} == 0)
-      op = rhs;
-    elseif (idx(1).subs{1} == 1)
-      first = rhs;
-    elseif (idx(1).subs{1} == 2)
-      second = rhs;
-    else
-      error("hequation: invalid member access");
-    endif
+      he.op = rhs;
+    case 1
+      he.first = hfunction(rhs);
+    case 2
+      he.second = hfunction(rhs);
+    otherwise
+      error("hequation: subsref: invalid access subscript (permited values between 0 and 2)");
+  endswitch
 
-    he = hequation(first, second, op);
-
-  else
-    error("hequation: invalid subscript type");
-  endif
+  he = hequation(he.first, he.second, he.op);
 
 endfunction

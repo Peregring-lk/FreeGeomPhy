@@ -21,37 +21,50 @@
 function hs = subsasgn(hs, idx, rhs)
 
   if (isempty(idx))
-    error("hsystem: expecting an index");
+    error("hsystem: subsasgn: expecting a index cell");
   endif
 
-  if (idx(1).type == "{}")
-    if (idx(1).subs{1} > length(hs.equations))
-      error("hsystem: invalid member access");
+  if (idx(1).type != "{}")
+    error("hsystem: subsasgn: invalid access operator");
+  endif
+
+  if (idx(1).subs{1} > 2)
+    error("hsystem: subsasgn: invalid member access");
+  endif
+
+  if (idx(1).subs{1} == 0)
+    if (!ischar(rhs))
+      error("hsystem: subsasgn: expecting operator as string");
     endif
 
-    if (idx(1).subs{1} == 0)
-      hs.op = rhs;
-    else
-      idx1 = idx(1).subs{1};
-
-      if (length(idx) > 1)
-        if (idx(2).type != "{}")
-          error("hsystem: invalid member access");
-        else
-          idx(1) = [];
-
-          hs0 = subsasgn(hs.equations{idx1}, idx, rhs);
-          hs.equations{idx1} = hs0;
-        endif
-      else
-        hs.equations{idx1} = rhs;
-      endif
-    endif
-
-    hs = hsystem(hs.op, hs.equations{:});
-
+    hs.op = rhs;
   else
-    error("hsystem: invalid subscript type");
+    idx1 = idx(1);
+
+    if (length(idx) > 1)
+      idx(1) = [];
+      hs{idx1} = subsasgn(hs{idx1}, idx, rhs);
+    else
+      if (!isa(rhs, "hequation") && !isa(rhs, "hsystem"))
+        error("hsystem: subsagn: expectring an equation or system");
+      endif
+
+      if (idx1.subs{1} == 1)
+        hs.hfirst = rhs;
+      elseif (idx1.subs{1} == 2)
+        hs.hsecond = rhs;
+      else
+        error("hsystem: subsasgn: invalid index access");
+      endif
+
+    endif
+
+  endif
+
+  if (isempty(hs.hsecond))
+    hs = hsystem(hs.hfirst);
+  else
+    hs = hsystem(hs.op, hs.hfirst, hs.hsecond);
   endif
 
 endfunction

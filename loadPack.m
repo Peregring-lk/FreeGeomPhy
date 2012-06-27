@@ -18,8 +18,10 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hfg = mrdivide(hfg, n)
+hX = hfunction("X", 0, "X");
 
-  hfg = mpower(hfg, 1 / n);
+hx = hX{1, :};
+hy = hX{2, :};
+hz = hX{3, :};
 
-endfunction
+hend = "end";

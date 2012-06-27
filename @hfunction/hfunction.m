@@ -18,40 +18,69 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hf = hfunction(arg, op)
+function hf = hfunction(arg, idxop, varargin)
 
-  if (nargin == 0)
-    hf = hfunction("x");
+  ##
+  ## Auxiliar case. For internal purposes only.
+  ##
+  ##  Binary and unary operations. Otherwise, call with almost two parameters.
+  ##
+  if (nargin == 1)
+    if (isa(arg, "hfunction"))
+      hf = arg;
+    elseif (ischar(arg))
+      hf = hv(arg);
+    elseif (is_function_handle(arg))
+      hf = hh(arg);
+    elseif (isscalar(arg))
+      hf = hn(arg);
+    else
+      error("hfunction: constructor: expecting a scalar, string o function handle");
+    endif
+
     return;
   endif
 
-  if (isa(arg, "hfunction"))
-    hf = arg;
-  else
-    if (is_function_handle(arg))
-      hf.hfunction = inline([func2str(arg) "([x; y; z])"]);
-      hf.op = "@";
-    elseif (ischar(arg)) # For internal purposes only.
-      hf.hfunction = inline(arg);
+  ##
+  ## Standard case.
+  ##
 
-      if (isvarname(arg))
-        hf.op = "@";
-      else
-        hf.op = "f";
-      endif
-    elseif (isnumeric(arg))
-      hf.hfunction = inline(num2str(arg));
-      hf.op = "@";
-    else
-      error("hfunction: expecting function handle, real number or variable name.");
-    endif
+  hf.hfunction = [];
 
-    if (nargin == 2)
-      hf.op = op;
-    endif
-
-    hf = class(hf, "hfunction");
-
+  if (!isscalar(idxop))
+    error("hfunction: constructor: expecting a scalar number as operator index");
   endif
+
+  hf.idxop = idxop;
+
+  ##  Make the string function
+  str = "";
+
+  if (ischar(arg))
+    str = arg;
+  elseif (is_function_handle(arg))
+    str = [ func2str(arg) "(" ];
+
+    if (!isempty(varargin))
+      str = [ str varargin{1} ];
+
+      for i = { varargin{2:end} }
+        str = [ str ", " i{:} ];
+      endfor
+
+    endif
+
+    str = [ str ")" ];
+
+  elseif (isscalar(arg))
+    str = num2str(arg);
+  else
+    error("hfunction: constructor: expecting a string, function handle or scalar number");
+  endif
+
+  ## Make the inline function
+  hf.hfunction = inline(str, varargin{:});
+
+  hf = class(hf, "hfunction");
 
 endfunction

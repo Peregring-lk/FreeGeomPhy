@@ -18,27 +18,27 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hg = mpower(hg, n)
+function hfg = mpower(hfg, n)
 
-  if (!isa(hg, "hfigure"))
-    error("hfigure: mpower: expecting a figure as first argument");
+  if (!isscalar(n))
+    error("hsystem: mpower: expecting scalar as second parameter");
   endif
 
-  if (!isnumeric(n))
-    error("hfigure: mpower: expecting a number as second argument");
+  if (hfg.dim == 3)
+    alpha = hfg.alpha;
+    beta = hfg.beta + n;
+
+    hfg.beta = beta;
+
+    sina = sin(alpha);
+    cosa = cos(alpha);
+
+    sinb = sin(beta);
+    cosb = cos(beta);
+
+    hfg.mrot = inv([ cosa  -sina * cosb   sina * sinb;
+                     sina   cosa * cosb  -cosa * sinb;
+                     0      sinb          cosb         ]);
   endif
-
-  hg.beta += n;
-
-  ## Assuming give us alpha and beta in radians.
-  sinalpha = sin(hg.alpha);
-  cosalpha = cos(hg.alpha);
-
-  sinbeta = sin(hg.beta);
-  cosbeta = cos(hg.beta);
-
-  hg.rotm = inv([ cosalpha  -sinalpha * cosbeta   sinalpha * sinbeta;
-                  sinalpha   cosalpha * cosbeta  -cosalpha * sinbeta;
-                  0          sinbeta              cosbeta             ]);
 
 endfunction

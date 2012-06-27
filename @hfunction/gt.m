@@ -18,8 +18,8 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function he = gt(a, b)
+function he = lt(hf1, hf2)
 
-  he = hequation(a, b, ">");
+  he = hequation(hf1, hf2, ">=");
 
 endfunction

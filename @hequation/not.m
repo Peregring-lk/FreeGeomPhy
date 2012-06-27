@@ -18,27 +18,25 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function he = not(he)
+function he = not(he0)
 
-  op = he{0};
-
-  switch (op)
+  switch (he0.op)
     case "<"
       op = ">=";
     case "<="
-      op = ">"
-    case ">"
-      op = "<=";
-    case ">="
-      op = "<";
+      op = ">";
     case "=="
       op = "!=";
     case "!="
       op = "==";
+    case ">="
+      op = "<"
+    case ">"
+      op = "<=";
     otherwise
-      error("hequation: not: invalid comparision operator");
+      error("hequation: not: invalid operator");
   endswitch
 
-  he{0} = op;
+  he = hequation(he0.first, he0.second, op);
 
 endfunction

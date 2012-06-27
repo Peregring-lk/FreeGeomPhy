@@ -21,23 +21,54 @@
 function v = subsref(hf, idx)
 
   if (isempty(idx))
-    error("hfunction: subsref: expecting an index");
+    error("hsystem: subsref: expecting a index cell");
   endif
 
-  if (idx.type == ".")
-    if (idx.subs == "hfunction")
-      v = hf.hfunction;
-    else
-      error("hfunction: subsref: invalid element access");
-    endif
-  elseif (idx.type == "()")
-    if (size(idx(1).subs{1}, 1) != 3)
-      error("hfunction: subsref: expecting a three dimensional first parameter");
+  if (idx(1).type == "{}")
+    str = char(hf);
+
+    if (hf.idxop > 1)
+      str = [ "(" str ")" ];
     endif
 
-    v = hf.hfunction(idx(1).subs{1}(1, :), idx(1).subs{1}(2, :), idx(1).subs{1}(3, :), idx.subs{2:end});
+    str = [ str "(" _mkaccess(hf, idx(1).subs) ")" ];
+
+    v = hfunction(str, 1, argnames(hf){:});
+  elseif (idx(1).type == "()")
+    v = hf.hfunction(idx(1).subs{:});
   else
-    error("hfunction: subsref: invalid subscript type");
+    error("hfunction: subsref: invalid access operator");
+  endif
+
+endfunction
+
+function str = _mkaccess(hf, subs)
+
+  str = "";
+
+  if (!isempty(subs))
+    arg = subs{1};
+
+    if (isscalar(arg))
+      str = num2str(arg);
+    elseif (ischar(arg))
+      str = arg;
+    else
+      error("hfunction: subsref: expecting a scalar or string index");
+    endif
+
+    for i = 2:length(subs)
+      arg = subs{i};
+
+      if (isscalar(arg))
+        arg = num2str(arg);
+      elseif (!ischar(arg))
+        error("hfunction: subsref: expecting a scalar or string index");
+      endif
+
+      str = [ str ", " arg ];
+    endfor
+
   endif
 
 endfunction

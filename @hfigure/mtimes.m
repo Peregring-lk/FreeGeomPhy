@@ -18,24 +18,8 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hg = mtimes(hg, b)
+function hfg = mtimes(hfg, n)
 
-  if (!isa(hg, "hfigure"))
-    error("hfigure: mtimes: expecting a figure as first operand");
-  endif
-
-  if (!isa(b, "hfigure") && !isa(b, "hsystem") && !isnumeric(b))
-    error("hfigure: mtimes: expecting a figure, equation system or number as second operand");
-  endif
-
-  if (isnumeric(b))
-    hg.scale *= b;
-  else
-    if (isa(b, "hfigure"))
-      b = b.hsystem;
-    endif
-
-    hs.hsystem = hg.hsystem & b;
-  endif
+  hfg = subsasgn(hfg, struct("type", ".", "subs", { "scale" }), n);
 
 endfunction

@@ -18,8 +18,20 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hfg = mrdivide(hfg, n)
+function hs = lt(hs, str)
 
-  hfg = mpower(hfg, 1 / n);
+  if (!isvarname(str))
+    error("hsystem: lt: expecting name var");
+  endif
+
+  args = argnames(hs);
+
+  not_str_idx = find(1 - strcmp(args, str));
+
+  if (isempty(not_str_idx))
+    hs.hsystem = inline(char(hs), str);
+  else
+    hs.hsystem = inline(char(hs), str, args{not_str_idx}{:});
+  endif
 
 endfunction

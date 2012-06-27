@@ -18,8 +18,8 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hf = minus(a, b)
+function hf = mpower(hf1, hf2)
 
-  hf = _binaryop(a, b, "^");
+  hf = _binaryop(hf1, hf2, "^");
 
 endfunction

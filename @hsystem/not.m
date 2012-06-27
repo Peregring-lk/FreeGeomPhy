@@ -20,17 +20,16 @@
 
 function hs = not(hs)
 
-  op = hs{0};
-
-  switch (op)
-    case "&"
-      op = "|";
-    case "|"
-      op = "&";
-    otherwise
-      error("hsystem: not: invalid set operation");
-  endswitch
-
-  hs = hsystem(op, !hs{1}, !hs{2});
+  if (isempty(hs.second))
+    hs = hsystem(!hs.first);
+  else
+    if (hs.op == "||")
+      hs = hsystem("&&", !hs.first, !hs.second);
+    elseif (hs.op == "&&")
+      hs = hsystem("||", !hs.first, !hs.second);
+    else
+      error("hsystem: not: invalid operator");
+    endif
+  endif
 
 endfunction
