@@ -18,16 +18,8 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hs = or(hs1, hs2)
+function hc = and(hc, n)
 
-  if (!isa(hs1, "hsystem") && !(isa(hs1, "hequation")))
-    error("hsystem: and: expecting system or equations as operand");
-  endif
-
-  if (!isa(hs2, "hsystem") && !(isa(hs2, "hequation")))
-    error("hsystem: and: expecting system or equations as operand");
-  endif
-
-  hs = hsystem("||", hs1, hs2);
+  error("hcube: and: operator disabled.");
 
 endfunction

@@ -18,16 +18,39 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hs = or(hs1, hs2)
+function v = subsref(hc, idx)
 
-  if (!isa(hs1, "hsystem") && !(isa(hs1, "hequation")))
-    error("hsystem: and: expecting system or equations as operand");
+  if (isempty(idx))
+    error("hsystem: subsasgn: expecting a index cell");
   endif
 
-  if (!isa(hs2, "hsystem") && !(isa(hs2, "hequation")))
-    error("hsystem: and: expecting system or equations as operand");
+  if (idx(1).type == ".")
+    if (strcmp(idx(1).subs, "side"))
+      v = hc.side;
+    elseif (strcmp(idx(1).subs, "dfside"))
+      v = hc.dfside;
+    else
+      v = subsref(hc.hfigure, idx);
+    endif
+  elseif (idx(1).type == "{}")
+    switch (idx(1).subs{1})
+      case 1
+        v = hc.hfigure{1};
+      case 2
+        v = hc.hfigure{2}{1};
+      case 3
+        v = hc.hfigure{2}{2}{1};
+      case 4
+        v = hc.hfigure{2}{2}{2}{1};
+      case 5
+        v = hc.hfigure{2}{2}{2}{2}{1};
+      case 6
+        v = hc.hfigure{2}{2}{2}{2}{2};
+      otherwise
+        error("hcube: subsref: invalid access index, only 1 to 6");
+    endswitch
+  else
+    v = subsref(hc.hfigure, idx);
   endif
-
-  hs = hsystem("||", hs1, hs2);
 
 endfunction

@@ -18,19 +18,24 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hfg = hfigure(hs, dim, origin, scale, alpha, beta)
+function hfg = hfigure(hs, op, dim, origin, scale, alpha, beta)
 
   if (nargin == 0)
     error("hfigure: constructor: expecting almost a equation system as parameter");
   endif
 
-  if (nargin < 2)
+  if (nargin == 1 && isa(hs, "hfigure"))
+    hfg = hs;
+    return;
+  endif
+
+  if (nargin < 2 || isempty(dim))
     dim = 3;
   elseif (!isscalar(dim) || dim < 2 || dim > 3)
     error("hfigure: constructor: expecting a scalar value (2 or 3) as dimension");
   endif
 
-  if (nargin < 3)
+  if (nargin < 3 || isempty(origin))
     origin = zeros(dim, 1);
   elseif (!isvector(origin) || !isnumeric(origin))
     error("hfigure: constructor: expecting a numeric vector or scalar as origin");
@@ -38,36 +43,61 @@ function hfg = hfigure(hs, dim, origin, scale, alpha, beta)
     origin = origin(:);
 
     if (length(origin) != dim)
-      error(["hfigure: construct: expecting a origin vector with dimension " dim ]);
+      error(["hfigure: constructor: expecting a origin vector with dimension " dim ]);
     endif
   endif
 
-  if (nargin < 4)
+  if (nargin < 4 || isempty(scale))
     scale = 1;
   elseif (!isvector(scale) || !isnumeric(scale))
-    error("hfigure: construct: expecting a numeric vector or scalar as scale");
+    error("hfigure: constructor: expecting a numeric vector or scalar as scale");
   else
     scale = scale(:);
 
     if (length(scale) != 1 && length(scale) != dim)
-      error(["hfigure: construct: expecting scale as scalar value or vector with dimension " dim ]);
+      error(["hfigure: constructor: expecting scale as scalar value or vector with dimension " dim ]);
     endif
 
   endif
 
-  if (nargin < 5)
+  if (nargin < 5 || isempty(alpha))
     alpha = 0;
   elseif (!isscalar(alpha))
-    error("hfigure: construct: expecting a scalar as alpha");
+    error("hfigure: constructor: expecting a scalar as alpha");
   endif
 
-  if (nargin < 6 && dim > 2)
-    beta = 0;
-  elseif (!isscalar(beta))
-    error("hfigure: construct: expecting a scalar as beta");
+  if (dim == 3)
+    if (nargin < 6 || isempty(beta))
+      beta = 0;
+    elseif (!isscalar(beta))
+      error("hfigure: constructor: expecting a scalar as beta");
+    endif
   endif
 
-  hfg.hsystem = hsystem(hs) < "X";
+  hfg.hsystem = {};
+  hfg.hfigures = {};
+  hfg.op = "";
+
+  if (iscell(hs))
+    if (!ischar(hs{1}))
+      error("hfigure: constructor: expecting a operator (string) as first element of first argument");
+    endif
+
+    hfg.op = hs{1};
+
+    if (hfg.op != "+" && hfg.op != "-" && hfg.op != "*")
+      error("hfigure: constructor: expecting a valir operator (+, - or *) as first element of first argument");
+    endif
+
+    for i = 2:numel(hs)
+      hfg.hfigures = { hfg.hfigures{:} hfigure(hs{i}) };
+    endfor
+
+  else
+    hfg.hsystem = hsystem(hs) < "X";
+    hfg.op = "";
+
+  endif
 
   hfg.dim = dim;
 
@@ -82,7 +112,7 @@ function hfg = hfigure(hs, dim, origin, scale, alpha, beta)
 
   hfg = hfg < alpha;
 
-  if (dim > 2)
+  if (dim == 3)
     hfg = hfg ^ beta;
   endif
 

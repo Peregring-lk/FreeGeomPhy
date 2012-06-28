@@ -27,7 +27,11 @@ function v = subsref(hfg, idx)
   if (idx(1).type == ".")
     switch (idx(1).subs)
       case "system"
-        v = hfg.hsystem;
+        if (isempty(hfg.hsystem))
+          v = hfg.hfigures;
+        else
+          v = hfg.hsystem;
+        endif
       case "dim"
         v = hfg.dim;
       case "origin"
@@ -40,7 +44,11 @@ function v = subsref(hfg, idx)
         v = hfg.beta;
     endswitch
   elseif (idx(1).type == "{}")
-    v = subsref(hfg.hsystem, idx);
+    if (isempty(hfg.hsystem))
+      v = subsref(hfg.hfigures, idx);
+    else
+      v = subsref(hfg.hsystem, idx);
+    endif
   elseif (idx(1).type == "()")
     X = idx(1).subs{1};
 
@@ -49,10 +57,36 @@ function v = subsref(hfg, idx)
     endif
 
     X -= hfg.origin;
+    X ./= scale;
     X = hfg.mrot * X;
-    X /= scale;
 
-    hfg.hsystem(X, idx(1).subs{2:end}{:});
+    if (isempty(hfg.hsystem))
+      switch (hfg.op)
+        case "+"
+          v = zeros(size(X, 2), 1);
+
+          for i = 1:numel(hfg.hfigures)
+            v |= hfg.hfigures{i}(X, idx(1).subs{2:end}{:});
+          endfor
+
+        case "*"
+          v = ones(size(X, 2), 1);
+
+          for i = 1:numel(hfg.hfigures)
+            v &= hfg.hfigures{i}(X, idx(1).subs{2:end}{:});
+          endfor
+
+        case "-"
+          v = ones(size(X, 2), 1);
+
+          for i = 1:numel(hfg.hfigures)
+            v &= !hfg.hfigures{i}(X, idx(1).subs{2:end}{:});
+          endfor
+      endswitch
+
+    else
+      v = hfg.hsystem(X, idx(1).subs{2:end}{:});
+    endif
 
   endif
 

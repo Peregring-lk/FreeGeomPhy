@@ -56,13 +56,15 @@ function hs = hsystem(varargin)
   hs.op = varargin{1};
 
   ## The operador "and" has right asociativity.
-  if (hs.op == "&")
+  if (hs.op == "&&")
     first = varargin{2};
-    second = varargin{3:end};
+    second = { varargin{3:end} };
   ## The operator "or" has left asociativity.
-  elseif (hs.op == "|")
-    first = varargin{2:end - 1};
+  elseif (hs.op == "||")
+    first = { varargin{2:end - 1} };
     second = varargin{end};
+  else
+    error("hsystem: constructor: invalid operator");
   endif
 
   hs.hfirst = _mkOperand(hs.op, first);
@@ -86,6 +88,10 @@ endfunction
 function hfs = _mkOperand(op, hfs)
 
   if (length(hfs) == 1)
+    if (iscell(hfs))
+      hfs = hfs{1};
+    endif
+
     if (!isa(hfs, "hsystem") && !isa(hfs, "hequation"))
       error("hsystem: constructor: expecting equations or system as parameters");
     endif
@@ -102,7 +108,7 @@ function str = _mkstr(hfs, op)
 
   if (isa(hfs, "hequation"))
     str = [ "(" str ")" ];
-  elseif (op != hfs.op && op == "&")
+  elseif (op != hfs.op && op == "&&")
     str = [ "(" str ")" ];
   endif
 

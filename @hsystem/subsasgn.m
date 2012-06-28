@@ -43,10 +43,11 @@ function hs = subsasgn(hs, idx, rhs)
 
     if (length(idx) > 1)
       idx(1) = [];
-      hs{idx1} = subsasgn(hs{idx1}, idx, rhs);
+      he = subsasgn(subsref(hs, idx1), idx, rhs);
+      hs = subsasgn(hs, idx1, he);
     else
       if (!isa(rhs, "hequation") && !isa(rhs, "hsystem"))
-        error("hsystem: subsagn: expectring an equation or system");
+        error("hsystem: subsagn: expecting an equation or system");
       endif
 
       if (idx1.subs{1} == 1)

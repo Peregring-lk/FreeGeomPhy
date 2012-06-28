@@ -28,6 +28,6 @@ function hs = and(hs1, hs2)
     error("hsystem: and: expecting system or equations as operand");
   endif
 
-  hs = hsystem("&", hs1, hs2);
+  hs = hsystem("&&", hs1, hs2);
 
 endfunction

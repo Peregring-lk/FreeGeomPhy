@@ -21,64 +21,80 @@
 function hfg = subasgn(hfg, idx, rhs)
 
   if (isempty(idx))
-    error("hsystem: subsref: expecting a index cell");
+    error("hfigure: subsasgn: expecting a index cell");
   endif
 
   if (idx(1).type == ".")
-    switch (idx(1).subs)
-      case "origin"
-        if (!isvector(rhs) || !isnumeric(rhs))
-          error("hfigure: subsasgn: expecting a numeric vector or scalar as origin");
-        endif
+    if (strcmp(idx(1).subs, "origin"))
+      if (!isvector(rhs) || !isnumeric(rhs))
+        error("hfigure: subsasgn: expecting a numeric vector or scalar as origin");
+      endif
 
-        rhs = rhs(:);
+      rhs = rhs(:);
 
-        if (length(rhs) != hfg.dim)
-          error(["hfigure: subasgn: expecting a origin vector with dimension " dim ]);
-        endif
+      if (length(rhs) != hfg.dim)
+        error(["hfigure: subasgn: expecting a origin vector with dimension " dim ]);
+      endif
 
-        hfg.origin = rhs;
+      hfg.origin = rhs;
 
-      case "scale"
-        if (!isvector(rhs) || !isnumeric(rhs))
-          error("hfigure: subasng: expecting a numeric vector or scalar as scale");
-        endif
+    elseif (strcmp(idx(1).subs, "scale"))
+      if (!isvector(rhs) || !isnumeric(rhs))
+        error("hfigure: subasgn: expecting a numeric vector or scalar as scale");
+      endif
 
-        rhs = rhs(:);
+      rhs = rhs(:);
 
-        if (length(rhs) != 1 && length(rhs) != dim)
-          error(["hfigure: subasgn: expecting scale as scalar value or vector with dimension " dim ]);
-        endif
+      if (length(rhs) != 1 && length(rhs) != dim)
+        error(["hfigure: subasgn: expecting scale as scalar value or vector with dimension " dim ]);
+      endif
 
-        hfg.scale = rhs;
+      hfg.scale = rhs;
 
-      case "alpha"
+    elseif (strcmp(idx(1).subs, "alpha"))
+      if (!isscalar(rhs))
+        error("hfigure: subasgn: expecting a scalar as alpha");
+      endif
+
+      rhs = hfg.alpha - rhs;
+
+      hfg = hfg < rhs;
+
+    elseif (strcmp(idx(1).subs, "beta"))
+      if (hfg.dim == 3)
         if (!isscalar(rhs))
           error("hfigure: subasgn: expecting a scalar as alpha");
         endif
 
-        rhs = hfg.alpha - rhs;
+        rhs = hfg.beta - rhs;
 
-        hfg = hfg < rhs;
+        hfg = hfg ^ rhs;
 
-      case "beta"
-        if (hfg.dim == 3)
-          if (!isscalar(rhs))
-            error("hfigure: subasgn: expecting a scalar as alpha");
-          endif
+      endif
 
-          rhs = hfg.beta - rhs;
+    elseif (strcmp(idx(1).subs, "op"))
+      if (!ischar(rhs))
+        error("hfigure: subasgn: expecting a string as r-value");
+      endif
 
-          hfg = hfg ^ rhs;
+      if (rhs != "+" && rhs != "-" && rhs != "*")
+        error("hfigure: subasgn: expecting a valid operator (+, -, * or |) as r-value");
+      endif
 
-        endif
+      hfg.op = rhs;
 
-      otherwise
-        error("hfigure: subasgn: invalid access element");
-    endswitch
+    else
+      error("hfigure: subasgn: invalid access element");
+
+    endif
 
   elseif (idx(1).type == "{}")
-    hfg.hsystem = subsasgn(hfg.hsystem, idx, rhs);
+    if (isempty(hfg.hsystem))
+      hfg.hfigures = subsasgn(hfg.hfigures, idx, rhs);
+    else
+      hfg.hsystem = subsasgn(hfg.hsystem, idx, rhs);
+    endif
+
   else
     error("hfigure: subasgn: invalid access");
   endif

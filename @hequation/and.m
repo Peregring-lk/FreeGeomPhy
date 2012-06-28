@@ -20,6 +20,6 @@
 
 function hs = and(he1, he2)
 
-  hs = hsystem("&", he1, he2);
+  hs = hsystem("&&", he1, he2);
 
 endfunction
