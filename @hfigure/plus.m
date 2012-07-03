@@ -18,8 +18,8 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hfs = plus(hfs, n)
+function hfg = plus(hfg, n)
 
-  hfg = subsasgn(hfg, struct("type", ".", "subs", { "origin" }), n);
+  hfg = subsasgn(hfg, struct("type", ".", "subs", { "origin" }), hfg.origin + n);
 
 endfunction

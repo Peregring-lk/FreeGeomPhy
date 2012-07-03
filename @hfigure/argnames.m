@@ -20,6 +20,18 @@
 
 function cstr = argnames(hfg)
 
-  cstr = argnames(hfg.hsystem);
+  if (isempty(hfg.hsystem))
+    vars = {};
+
+    for i = 1:numel(hfg.hfigures)
+      vars = { vars{:} argnames(hfg.hfigures{i}) };
+    endfor
+
+    [ ~, i ] = unique(vars, "first");
+    vars = vars(sort(i));
+
+  else
+    cstr = argnames(hfg.hsystem);
+  endif
 
 endfunction

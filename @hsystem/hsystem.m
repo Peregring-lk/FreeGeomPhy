@@ -73,7 +73,7 @@ function hs = hsystem(varargin)
   ## Making variable list
   vars = { argnames(hs.hfirst){:}, argnames(hs.hsecond){:} };
 
-  [ u i ] = unique(vars, "first");
+  [ ~, i ] = unique(vars, "first");
   vars = vars(sort(i));
 
   ## Making hfunction

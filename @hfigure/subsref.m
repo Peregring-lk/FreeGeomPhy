@@ -51,41 +51,36 @@ function v = subsref(hfg, idx)
     endif
   elseif (idx(1).type == "()")
     X = idx(1).subs{1};
+    remainder = { idx(1).subs{2:end} };
 
     if (size(X, 1) != hfg.dim)
       error(["hfigure: subsref: expecting a matrix data of dimension " hfg.dim]);
     endif
 
     X -= hfg.origin;
-    X ./= scale;
+    X ./= hfg.scale;
     X = hfg.mrot * X;
 
     if (isempty(hfg.hsystem))
-      switch (hfg.op)
-        case "+"
-          v = zeros(size(X, 2), 1);
+      remaindersel = remainder(hfg.idxvars{1});
 
-          for i = 1:numel(hfg.hfigures)
-            v |= hfg.hfigures{i}(X, idx(1).subs{2:end}{:});
-          endfor
+      v = hfg.hfigures{1}(X, remaindersel{:});
 
-        case "*"
-          v = ones(size(X, 2), 1);
+      for i = 2:numel(hfg.hfigures)
+        remaindersel = remainder(hfg.idxvars{i});
 
-          for i = 1:numel(hfg.hfigures)
-            v &= hfg.hfigures{i}(X, idx(1).subs{2:end}{:});
-          endfor
-
-        case "-"
-          v = ones(size(X, 2), 1);
-
-          for i = 1:numel(hfg.hfigures)
-            v &= !hfg.hfigures{i}(X, idx(1).subs{2:end}{:});
-          endfor
-      endswitch
+        switch (hfg.op)
+          case "+"
+            v |= hfg.hfigures{i}(X, remaindersel{:});
+          case "*"
+            v &= hfg.hfigures{i}(X, remaindersel{:});
+          case "-"
+            v &= !hfg.hfigures{i}(X, remaindersel{:});
+        endswitch
+      endfor
 
     else
-      v = hfg.hsystem(X, idx(1).subs{2:end}{:});
+      v = hfg.hsystem(X, remainder{:});
     endif
 
   endif

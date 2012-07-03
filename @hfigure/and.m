@@ -20,6 +20,10 @@
 
 function hfg = and(hfg, hs)
 
+  if (isempty(hfg.hsystem))
+    error("hfigure: and: and/or operations denied in multifigure objects");
+  endif
+
   hfg.hsystem = hfg.hsystem & hs;
 
 endfunction

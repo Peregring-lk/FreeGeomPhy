@@ -18,12 +18,8 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hfg = or(hfg, hs)
+function str = char(hc)
 
-  if (isempty(hfg.hsystem))
-    error("hfigure: and: and/or operations denied in multifigure objects");
-  endif
-
-  hfg.hsystem = hfg.hsystem | hs;
+  str = char(hc.hfigure);
 
 endfunction

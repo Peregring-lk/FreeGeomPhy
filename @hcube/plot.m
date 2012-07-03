@@ -18,12 +18,9 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hfg = or(hfg, hs)
+function plot(hc, varargin)
 
-  if (isempty(hfg.hsystem))
-    error("hfigure: and: and/or operations denied in multifigure objects");
-  endif
-
-  hfg.hsystem = hfg.hsystem | hs;
+  plot(hc.hfigure, varargin{:}, struct("type", "cube", "side", hc.side, "scale", "disable"));
+  #plot(hc.hfigure, varargin{:});
 
 endfunction

@@ -18,7 +18,7 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hfg = hfigure(hs, op, dim, origin, scale, alpha, beta)
+function hfg = hfigure(hs, dim, origin, scale, alpha, beta)
 
   if (nargin == 0)
     error("hfigure: constructor: expecting almost a equation system as parameter");
@@ -76,6 +76,7 @@ function hfg = hfigure(hs, op, dim, origin, scale, alpha, beta)
 
   hfg.hsystem = {};
   hfg.hfigures = {};
+  hfg.idxvars = {};
   hfg.op = "";
 
   if (iscell(hs))
@@ -86,7 +87,7 @@ function hfg = hfigure(hs, op, dim, origin, scale, alpha, beta)
     hfg.op = hs{1};
 
     if (hfg.op != "+" && hfg.op != "-" && hfg.op != "*")
-      error("hfigure: constructor: expecting a valir operator (+, - or *) as first element of first argument");
+      error("hfigure: constructor: expecting a valid operator (+, - or *) as first element of first argument");
     endif
 
     for i = 2:numel(hs)
@@ -114,6 +115,18 @@ function hfg = hfigure(hs, op, dim, origin, scale, alpha, beta)
 
   if (dim == 3)
     hfg = hfg ^ beta;
+  endif
+
+  # Search idxvars for each figure
+  if (isempty(hfg.hsystem))
+    hfg.idxvars = cell(numel(hfg.hfigures), 1);
+    vars = argnames(hfg);
+
+    for i = 1:numel(hfg.hfigures)
+      [ ~, j ] = intersect(vars, argnames(hfg.hfigures{i}));
+      hfg.idxvars{i} = j(2:end);
+    endfor
+
   endif
 
   superiorto("hsystem");

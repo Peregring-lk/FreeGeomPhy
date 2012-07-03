@@ -84,7 +84,7 @@ function hc = hcube(origin, side, alpha, beta, scheme)
   endif
 
   if (isempty(scheme{5}))
-    scheme{5} = hz <= -0.5 * side;
+    scheme{5} = hz <= 0.5 * side;
   elseif (isa(scheme{5}, "hfunction"))
     scheme{5} = hz <= scheme{5};
   else
@@ -99,12 +99,12 @@ function hc = hcube(origin, side, alpha, beta, scheme)
     error("hcube: constructor: expecting hfunction objects in scheme cell");
   endif
 
-  hs = hsystem("&&", scheme{:});
-  hfg = hfigure(hs, 3, origin, 1, alpha, beta);
+  hs = hsystem("&", scheme{:});
+  hc.hfigure = hfigure(hs, 3, origin, 1, alpha, beta);
 
   hc.side = side;
   hc.dfside = side;
 
-  hc = class(hc, "hcube", hfg);
+  hc = class(hc, "hcube");
 
 endfunction
