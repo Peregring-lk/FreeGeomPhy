@@ -18,7 +18,7 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hf = minus(hf2, hf1)
+function hf = minus(hf1, hf2)
 
   hf = _binaryop(hf1, hf2, "-");
 

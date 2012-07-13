@@ -18,8 +18,8 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hX = hfX()
+function hf = sin(hf)
 
-  hX = hfunction("X", 0, "X");
+  hf = _overfun(hf, "sin");
 
 endfunction

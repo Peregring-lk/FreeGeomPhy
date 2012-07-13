@@ -27,13 +27,13 @@ function v = subsref(hf, idx)
   if (idx(1).type == "{}")
     str = char(hf);
 
-    if (hf.idxop > 1)
+    if (hf.op != "")
       str = [ "(" str ")" ];
     endif
 
     str = [ str "(" _mkaccess(hf, idx(1).subs) ")" ];
 
-    v = hfunction(str, 1, argnames(hf){:});
+    v = hfunction(str, "{}", argnames(hf){:});
   elseif (idx(1).type == "()")
     v = hf.hfunction(idx(1).subs{:});
   else

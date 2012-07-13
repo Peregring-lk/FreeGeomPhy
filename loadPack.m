@@ -18,7 +18,7 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-hX = hfunction("X", 0, "X");
+hX = hfunction("X", "", "X");
 
 hx = hX{1, :};
 hy = hX{2, :};

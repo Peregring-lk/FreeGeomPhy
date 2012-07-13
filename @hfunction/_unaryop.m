@@ -25,8 +25,11 @@ function hf = _unaryop(hf, op)
   ## Brackets discrimination
   brackets = false;
   idxop = _idxop(op);
+  hfidxop = _idxop(hf.op);
 
-  if (idxop < hf.idxop)
+  if (idxop < hfidxop)
+    brackets = true;
+  elseif (idxop == hfidxop && !strcmp(op, hf.op))
     brackets = true;
   endif
 
@@ -37,21 +40,43 @@ function hf = _unaryop(hf, op)
     str = [ "(" str ")" ];
   endif
 
-  str = [ op str ];
+  if (strcmp(op, "-."))
+    mop = "-";
+  elseif (strcmp(op, "+."))
+    mop = "+";
+  else
+    mop = op;
+  endif
+
+  str = [ mop str ];
 
   ## Making hfunction
-  hf = hfunction(str, idxop, argnames(hf){:});
+  hf = hfunction(str, op, argnames(hf){:});
 
 endfunction
 
 function p = _idxop(op)
 
-  if (op == "'" || op == ".'")
-    p = 2;
-  elseif (op == "+" || op == "-" || op == "!")
+  if (strcmp(op, ""))
+    p = 0;
+  elseif (strcmp(op, "{}"))
+    p = 1;
+  elseif (strcmp(op, "^") || strcmp(op, ".^") || strcmp(op, "'") || strcmp(op, ".'"))
     p = 3;
+  elseif (strcmp(op, "+.") || strcmp(op, "-.") || strcmp(op, "!"))
+    p = 4;
+  elseif (strcmp(op, "*") || strcmp(op, ".*") || strcmp(op, "/") || strcmp(op, "./"))
+    p = 5;
+  elseif (strcmp(op, "+") || strcmp(op, "-"))
+    p = 6;
+  elseif (strcmp(op, "<") || strcmp(op, "<=") || strcmp(op, "==") || strcmp(op, "!=") || strcmp(op, ">=") || strcmp(op, ">"))
+    p = 8;
+  elseif (strcmp(op, "&"))
+    p = 9;
+  elseif (strcmp(op, "|"))
+    p = 10;
   else
-    error("_unaryop: idxop: invalid operator");
+    error("_binaryop: idxop: invalid operator");
   endif
 
 endfunction

@@ -20,6 +20,6 @@
 
 function hf = uminus(hf)
 
-  hf = _unaryop(hf, "-");
+  hf = _unaryop(hf, "-.");
 
 endfunction

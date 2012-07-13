@@ -18,8 +18,8 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hf = uplus(hf)
+function hpi = hpi()
 
-  hf = _unaryop(hf, "+.");
+  hpi = hfunction("pi", "");
 
 endfunction

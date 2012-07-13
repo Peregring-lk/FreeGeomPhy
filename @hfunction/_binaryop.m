@@ -28,12 +28,18 @@ function hf = _binaryop(hf1, hf2, op)
   brackets2 = false;
 
   idxop = _idxop(op);
+  hf1idxop = _idxop(hf1.op);
+  hf2idxop = _idxop(hf2.op);
 
-  if (idxop < hf1.idxop)
+  if (idxop < hf1idxop && hf1idxop != 4)
+    brackets1 = true;
+  elseif (idxop == hf1idxop && !strcmp(op, hf1.op))
     brackets1 = true;
   endif
 
-  if (idxop < hf2.idxop)
+  if (idxop < hf2idxop && hf2idxop != 4)
+    brackets2 = true;
+  elseif (idxop == hf2idxop && !strcmp(op, hf2.op))
     brackets2 = true;
   endif
 
@@ -58,24 +64,30 @@ function hf = _binaryop(hf1, hf2, op)
   vars = vars(sort(i));
 
   ## Making hfunction
-  hf = hfunction(str, idxop, vars{:});
+  hf = hfunction(str, op, vars{:});
 
 endfunction
 
 function p = _idxop(op)
 
-  if (op == "^" || op == ".^")
-    p = 2;
-  elseif (op == "*" || op == ".*" || op == "/" || op == "./")
+  if (strcmp(op, ""))
+    p = 0;
+  elseif (strcmp(op, "{}"))
+    p = 1;
+  elseif (strcmp(op, "^") || strcmp(op, ".^") || strcmp(op, "'") || strcmp(op, ".'"))
+    p = 3;
+  elseif (strcmp(op, "+.") || strcmp(op, "-.") || strcmp(op, "!"))
     p = 4;
-  elseif (op == "+" || op == "-")
+  elseif (strcmp(op, "*") || strcmp(op, ".*") || strcmp(op, "/") || strcmp(op, "./"))
     p = 5;
-  elseif (op == "<" || op == "<=" || op == "==" || op == "!=" || op == ">=" || op == ">")
-    p = 7;
-  elseif (op == "&")
+  elseif (strcmp(op, "+") || strcmp(op, "-"))
+    p = 6;
+  elseif (strcmp(op, "<") || strcmp(op, "<=") || strcmp(op, "==") || strcmp(op, "!=") || strcmp(op, ">=") || strcmp(op, ">"))
     p = 8;
-  elseif (op == "|")
+  elseif (strcmp(op, "&"))
     p = 9;
+  elseif (strcmp(op, "|"))
+    p = 10;
   else
     error("_binaryop: idxop: invalid operator");
   endif

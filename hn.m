@@ -20,6 +20,10 @@
 
 function hn = hn(n)
 
-  hn = hfunction(n, 0);
+  if (!isscalar(n))
+    error("hv: expecting a scalar number");
+  endif
+
+  hn = hfunction(n, "");
 
 endfunction

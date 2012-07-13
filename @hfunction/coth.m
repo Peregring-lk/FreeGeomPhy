@@ -18,8 +18,8 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hf = uplus(hf)
+function hf = coth(hf)
 
-  hf = _unaryop(hf, "+.");
+  hf = _overfun(hf, "coth");
 
 endfunction

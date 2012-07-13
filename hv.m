@@ -24,6 +24,6 @@ function hv = hv(varname)
     error("hv: expecting a variable name");
   endif
 
-  hv = hfunction(varname, 0, varname);
+  hv = hfunction(varname, "", varname);
 
 endfunction

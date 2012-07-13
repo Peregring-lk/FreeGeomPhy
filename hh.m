@@ -24,6 +24,6 @@ function hh = hh(hf, varargin)
     error("hh: expecting a function handle argument");
   endif
 
-  hh = hfunction(hf, 0, varargin{:});
+  hh = hfunction(hf, "", varargin{:});
 
 endfunction

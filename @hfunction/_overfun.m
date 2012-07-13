@@ -18,8 +18,10 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hf = uplus(hf)
+function hf = _overfun(hf, str)
 
-  hf = _unaryop(hf, "+.");
+  str = [ str "(" char(hf) ")" ];
+
+  hf = hfunction(str, "", argnames(hf){:});
 
 endfunction

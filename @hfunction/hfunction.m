@@ -18,7 +18,7 @@
 ## License along with FreeGeomPhy; see the file COPYING.  If not,
 ## see <http://www.gnu.org/licenses/>.
 
-function hf = hfunction(arg, idxop, varargin)
+function hf = hfunction(arg, op, varargin)
 
   ##
   ## Auxiliar case. For internal purposes only.
@@ -47,11 +47,11 @@ function hf = hfunction(arg, idxop, varargin)
 
   hf.hfunction = [];
 
-  if (!isscalar(idxop))
+  if (!ischar(op))
     error("hfunction: constructor: expecting a scalar number as operator index");
   endif
 
-  hf.idxop = idxop;
+  hf.op = op;
 
   ##  Make the string function
   str = "";
@@ -78,8 +78,17 @@ function hf = hfunction(arg, idxop, varargin)
     error("hfunction: constructor: expecting a string, function handle or scalar number");
   endif
 
+  ## Make 'X' as first parameter
+  not_X_idx = find(1 - strcmp(varargin, "X"));
+
+  if (isempty(not_X_idx))
+    vars = { "X" };
+  else
+    vars = { "X", varargin{not_X_idx} };
+  endif
+
   ## Make the inline function
-  hf.hfunction = inline(str, varargin{:});
+  hf.hfunction = inline(str, vars{:});
 
   hf = class(hf, "hfunction");
 
