@@ -55,15 +55,11 @@ function plot3(hf, xmin, step, xmax, strtitle, varargin)
 
   X = [xx yy]';
 
-  size(X)
-
   ## Get solutions.
   idx.type = "()";
   idx.subs = { X, varargin{:} };
 
   zz = subsref(hf, idx)(:);
-
-  size(zz)
 
   ## Plotting
   hold on;
@@ -86,17 +82,38 @@ function plot3(hf, xmin, step, xmax, strtitle, varargin)
   ylabel("y");
   zlabel("z");
 
-  axis equal;
+  axis tight;
   view(30, 30);
 
   grid;
 
-  ## Set title.
+  ## Set parameters.
+  if (numel(varargin) > 0)
+    strparams = "";
 
-  if (strcmp(strtitle, ""))
-    strtitle = char(hf);
+    args = { argnames(hf){2:end} };
+
+    if (ischar(args))
+      args = { args };
+    endif
+
+    for i = 1:numel(varargin)
+      strparams = [ strparams args{i} " = " ];
+      strparams = [ strparams num2str(varargin{i}) ", " ];
+    endfor
+
+    strparams = strparams(1:end - 2);
+
+    strstdtitle = [ char(hf) "   with   " strparams ];
   else
-    strtitle = [ strtitle ":" char(hf) ];
+    strstdtitle = char(hf);
+  endif
+
+  ## Set title.
+  if (!strcmp(strtitle, ""))
+    strtitle = [ strtitle "\n" strstdtitle ];
+  else
+    strtitle = strstdtitle;
   endif
 
   title(strtitle);

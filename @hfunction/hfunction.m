@@ -78,7 +78,7 @@ function hf = hfunction(arg, op, varargin)
     error("hfunction: constructor: expecting a string, function handle or scalar number");
   endif
 
-  ## Make 'X' as first parameter
+  ## Make 'X' the first parameter
   not_X_idx = find(1 - strcmp(varargin, "X"));
 
   if (isempty(not_X_idx))

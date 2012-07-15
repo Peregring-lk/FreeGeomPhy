@@ -58,9 +58,6 @@ function H = plot(hf, xmin, step, xmax, strtitle, varargin)
 
   H = plot(X, y);
 
-  xlabel("x");
-  ylabel("y");
-
   axis tight;
 
   grid;
@@ -69,14 +66,15 @@ function H = plot(hf, xmin, step, xmax, strtitle, varargin)
   if (numel(varargin) > 0)
     strparams = "";
 
-    args = argnames(hf){2:end};
+    args = { argnames(hf){2:end} };
 
     if (ischar(args))
       args = { args };
     endif
 
     for i = 1:numel(varargin)
-      strparams = [ strparams args{i} " = " num2str(varargin{i}) ", " ];
+      strparams = [ strparams args{i} " = " ];
+      strparams = [ strparams num2str(varargin{i}) ", " ];
     endfor
 
     strparams = strparams(1:end - 2);

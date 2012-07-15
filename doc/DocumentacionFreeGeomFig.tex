@@ -571,15 +571,109 @@ del cable) suspendida por sus extremos, dentro de un campo gravitatorio
 uniforme.
 
 Una de las posibles ecuaciones de una cateneria es \[ f(x) =
-a cosh(\frac{x}{a}) \] siendo $a$ un parámetro que representa la
+a \times cosh\left(\frac{x}{a}\right) \] siendo $a$ un parámetro que representa la
 separación entre los extremos de dicha cuerda o cable. A mayor sea
 $a$, menos acusada será la curva.
 
 Para ilustrar nuestro ejemplo, vamos a ver cuatro catenarias en el
 intervalo $[-5, 5]$ con los valores para $a$, 0.25, 0.5, 1, 2.
 
-% Catenaria
-% Gausiana
-% ... por determinar.
+\begin{minipage}{0.4\textwidth}
+\begin{minted}[linenos, frame=lines]{octave}
+loadPack;
+
+hf = hv("a") * cosh(hX / "a");
+
+interval = { -5, 0.1, 5 };
+
+subplot(2, 2, 1);
+plot(hf, inverval{:}, 0.25);
+
+subplot(2, 2, 2);
+plot(hf, interval{:}, 0.5);
+
+subplot(2, 2, 3);
+plot(hf, interval{:}, 1);
+
+subplot(2, 2, 4);
+plot(hf, interval{:}, 2);
+\end{minted}
+\end{minipage}
+\begin{minipage}{0.6\textwidth}
+\includegraphics[scale=0.48]{figure2.png}
+\end{minipage}
+
+\vspace*{0.5cm}
+Como vemos, cuando una función tiene parámetros, los parámetros son
+indicados junto a la descripción de la hfunción. También podemos ver
+que el comportamiento de la sobrecarga de \texttt{plot} para
+hfunciones es equivalente a las llamadas usuales de \texttt{plot}, y
+por ello, se interactúa con \texttt{subplot} de forma satisfactoria.
+
+\subsubsection{Gausiana bidimensional}
+Ahora veremos una función gausiana para ilustrar que, para funciones
+complejas, se dificulta bastante la edición y lectura de la misma. Eso
+se puede intuir viendo el aspecto de la función.
+
+\begin{minted}[linenos, frame=lines]{octave}
+loadPack;
+
+hf = (1 / (hv("s") * sqrt(2 * hpi))) * he .^ -(0.5 * ((hX - "m") / "s") .^ 2);
+
+plot(hf, -5, 0.1, 5, "Guassian distribution N(0, 1)", 1, 0);
+
+\end{minted}
+
+\begin{center}
+\includegraphics[scale=0.5]{figure3.png}
+\end{center}
+
+Hemos dibujado a la función normal $\mathcal{N}(0, 1)$, y, como
+podemos deducir viendo la forma de la función, para empezar los
+parámetros son, y en este órden, $\sigma$ y $\mu$, que se corresponden
+con $s$ y $m$ en la hfunción, es decir, justo al contrario que el
+órden natural de paso de estos parámetros. Esto es así ya que $s$
+aparece antes en la descripción de la hfunción, y no hay forma (al
+menos no, de momento), de indicar el órden preciso de los parámetros
+de una hfunción.
+
+Además, la hfunción tiene una descripción poco cómoda, y
+debido a que las hfunciones no permiten modificar los subelementos de
+una función, habría que volver a escribirla entera si se quieren
+realizar modificaciones.
+
+Así que, como hemos indicado, las hfunciones no están diseñadas, al
+menos por ahora, para ser un mecanismo absolutamente completo de trato
+de funciones, ya que se ha programado con ciertas restricciones
+necesarias para el uso que se le debe dar, y así simplificar la
+implementación de la clase (\refpar{sec:hfun}). La forma de solucionar
+esto sería, en todo caso, programar una función de Octave que
+implemente la distribución normal, o usar la que ya está disponible en
+el paquete \textit{Statistics} de Octave, y mediante \texttt{hh}
+transformarla a una hfunción (\refpar{ssec:constr}).
+
+\subsubsection{Paraboloide hiperbólico}
+Ahora vamos a ejemplificar el uso de \texttt{hfunction} con funciones
+tridimensional mediante la función del paraboloide hiperbólico \[
+f(x, y) = k\left(\left(\frac{y}{a}\right)^2 - \left(\frac{x}{b}\right) ^ 2\right) \]
+también conocida como «silla de montar».
+
+\begin{minted}[linenos, frame=lines]{octave}
+loadPack;
+
+hf = hv("k") * ((hx ./ "a") .^ 2 - (hy ./ "b") .^ 2);
+
+interval = { -10, 0.1, 10 };
+
+subplot(1, 2, 1);
+plot(hf, interval{:}, -5, -6, 4);
+
+subplot(1, 2, 2);
+plot(hf, interval{:}, 4, 3, -7);
+\end{minted}
+
+\begin{center}
+\includegraphics[scale=0.5]{figure4.png}
+\end{center}
 
 \end{document}
